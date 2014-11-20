@@ -1,9 +1,10 @@
 package hello
 
 import (
-	"bytes"
-	"encoding/gob"
+	"errors"
 	"net/http"
+
+	"submodule"
 
 	"appengine"
 	"appengine/delay"
@@ -19,17 +20,13 @@ type Object struct {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	t, err := laterFunc.Task(Object{})
+	c.Infof("%T %T", Object{}, submodule.Object{})
+
+	t, err := laterFunc.Task(Object{}, submodule.Object{})
 	c.Infof("err=%+v", err)
 	c.Infof("payload=%s", t.Payload)
-
-	buf := &bytes.Buffer{}
-	args := []interface{}{Object{}}
-	err = gob.NewEncoder(buf).Encode(args)
-	c.Infof("err=%+v", err)
-	c.Infof("payload=%s", buf.Bytes())
 }
 
-var laterFunc = delay.Func("key", func(c appengine.Context, obj Object) {
-	c.Infof("later")
+var laterFunc = delay.Func("key", func(c appengine.Context, obj1 Object, obj2 submodule.Object) error {
+	return errors.New("retry")
 })
