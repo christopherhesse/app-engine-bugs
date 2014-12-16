@@ -1,0 +1,12 @@
+application: app-engine-bugs
+module: ah_start
+version: backend
+runtime: go
+instance_class: B1
+manual_scaling:
+  instances: 1
+api_version: go1
+
+handlers:
+- url: /.*
+  script: _go_app
