@@ -10,8 +10,6 @@ import (
 	"google.golang.org/appengine/taskqueue"
 )
 
-// GOPATH=$PWD appcfg.py update src/aenamespace/app.yaml
-
 func init() {
 	http.HandleFunc("/new-enqueue", newEnqueueHandler)
 	http.HandleFunc("/new-task", newTaskHandler)
@@ -42,6 +40,7 @@ func newEnqueueHandler(w http.ResponseWriter, r *http.Request) {
 
 func newTaskHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := appengine.NewContext(r)
+	// ctx, _ = appengine.Namespace(ctx, "new-namespace") // adding this line will fix the issue
 	if item, err := memcache.Get(ctx, "new-key"); err == memcache.ErrCacheMiss {
 		log.Infof(ctx, "item not in the cache")
 	} else if err != nil {
