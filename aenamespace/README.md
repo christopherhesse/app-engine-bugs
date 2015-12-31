@@ -1,3 +1,5 @@
+If this test is correct, tasks on classic appengine using the new library (google.golang.org/appengine) will lose their namespaces.
+
 GOPATH=$PWD appcfg.py update src/aenamespace/app.yaml
 
 curl https://aenamespace-dot-ae-bugs.appspot.com/classic-enqueue
